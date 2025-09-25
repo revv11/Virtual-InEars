@@ -1,10 +1,23 @@
 import { useState } from 'react';
 import LandingPage from '@/components/LandingPage';
 import MetronomeRoom from '@/components/MetronomeRoom';
-import useRoom from '@/hooks/useRoom';
+import { useRoom } from '@/hooks/useRoom';
 
 const Index = () => {
-  const { roomState, createRoom, joinRoom, leaveRoom } = useRoom();
+  const { 
+    roomState, 
+    metronomeState, 
+    connectionStatus, 
+    error,
+    clockOffset,
+    createRoom, 
+    joinRoom, 
+    leaveRoom,
+    startMetronome,
+    stopMetronome,
+    changeBPM,
+    changeTimeSignature
+  } = useRoom();
 
   const handleCreateRoom = (userName: string) => {
     createRoom(userName);
@@ -21,7 +34,13 @@ const Index = () => {
         isHost={roomState.isHost}
         users={roomState.users}
         currentUser={roomState.currentUser}
+        metronomeState={metronomeState}
         onLeaveRoom={leaveRoom}
+        clockOffsetRef={clockOffset}
+        onStartMetronome={startMetronome}
+        onStopMetronome={stopMetronome}
+        onChangeBPM={changeBPM}
+        onChangeTimeSignature={changeTimeSignature}
       />
     );
   }
@@ -30,6 +49,8 @@ const Index = () => {
     <LandingPage
       onCreateRoom={handleCreateRoom}
       onJoinRoom={handleJoinRoom}
+      connectionStatus={connectionStatus}
+      error={error}
     />
   );
 };

@@ -4,14 +4,17 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Music, Users, Wifi, Clock } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Music, Users, Wifi, Clock, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 
 interface LandingPageProps {
   onCreateRoom: (userName: string) => void;
   onJoinRoom: (roomCode: string, userName: string) => void;
+  connectionStatus?: 'disconnected' | 'connecting' | 'connected';
+  error?: string | null;
 }
 
-const LandingPage = ({ onCreateRoom, onJoinRoom }: LandingPageProps) => {
+const LandingPage = ({ onCreateRoom, onJoinRoom, connectionStatus, error }: LandingPageProps) => {
   const [userName, setUserName] = useState('');
   const [roomCode, setRoomCode] = useState('');
 
@@ -61,6 +64,44 @@ const LandingPage = ({ onCreateRoom, onJoinRoom }: LandingPageProps) => {
             </Badge>
           </div>
         </div>
+
+        {/* Connection Status */}
+        {connectionStatus && (
+          <div className="mb-6">
+            {connectionStatus === 'connecting' && (
+              <Alert className="border-yellow-200 bg-yellow-50">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <AlertDescription>
+                  Connecting to server...
+                </AlertDescription>
+              </Alert>
+            )}
+            {connectionStatus === 'connected' && (
+              <Alert className="border-green-200 bg-green-50">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <AlertDescription>
+                  Connected to server
+                </AlertDescription>
+              </Alert>
+            )}
+            {connectionStatus === 'disconnected' && (
+              <Alert className="border-red-200 bg-red-50">
+                <AlertCircle className="h-4 w-4 text-red-600" />
+                <AlertDescription>
+                  Disconnected from server
+                </AlertDescription>
+              </Alert>
+            )}
+            {error && (
+              <Alert className="border-red-200 bg-red-50 mt-2">
+                <AlertCircle className="h-4 w-4 text-red-600" />
+                <AlertDescription>
+                  {error}
+                </AlertDescription>
+              </Alert>
+            )}
+          </div>
+        )}
 
         {/* Main interface */}
         <Card className="bg-card/50 backdrop-blur-sm border-border/50 shadow-panel">
