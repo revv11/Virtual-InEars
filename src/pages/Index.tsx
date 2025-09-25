@@ -1,13 +1,36 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import LandingPage from '@/components/LandingPage';
+import MetronomeRoom from '@/components/MetronomeRoom';
+import useRoom from '@/hooks/useRoom';
 
 const Index = () => {
+  const { roomState, createRoom, joinRoom, leaveRoom } = useRoom();
+
+  const handleCreateRoom = (userName: string) => {
+    createRoom(userName);
+  };
+
+  const handleJoinRoom = (roomCode: string, userName: string) => {
+    joinRoom(roomCode, userName);
+  };
+
+  if (roomState) {
+    return (
+      <MetronomeRoom
+        roomCode={roomState.roomCode}
+        isHost={roomState.isHost}
+        users={roomState.users}
+        currentUser={roomState.currentUser}
+        onLeaveRoom={leaveRoom}
+      />
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <LandingPage
+      onCreateRoom={handleCreateRoom}
+      onJoinRoom={handleJoinRoom}
+    />
   );
 };
 
